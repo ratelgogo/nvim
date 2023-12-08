@@ -9,10 +9,6 @@ return {
     -- second key is the lefthand side of the map
     ["<Esc>"] = { ":noh<cr>", desc = "Clear highlights" },
     ["<C-c>"] = { ":%y+<cr>", desc = "Copy whole file" },
-    ["<leader>m"] = {
-      function() vim.lsp.buf.format { async = true } end,
-      desc = "LSP formatting",
-    },
 
     -- navigate buffer tabs with `H` and `L`
     ["<tab>"] = {
@@ -33,6 +29,10 @@ return {
       end,
       desc = "Pick to close",
     },
+    ["<leader>x"] = {
+      function() require("astronvim.utils.buffer").close() end,
+      desc = "close current buffer",
+    },
     -- tables with the `name` key will be registered with which-key if it's installed
     -- this is useful for naming menus
     ["<leader>b"] = { name = "Buffers" },
@@ -42,5 +42,12 @@ return {
   t = {
     -- setting a mapping to false will disable it
     -- ["<esc>"] = false,
+  },
+  i = {
+    -- navigate within insert mode
+    ["<C-h>"] = { "<Left>", desc = "Move left" },
+    ["<C-l>"] = { "<Right>", desc = "Move right" },
+    ["<C-j>"] = { "<Down>", desc = "Move down" },
+    ["<C-k>"] = { "<Up>", desc = "Move up" },
   },
 }
