@@ -38,6 +38,30 @@ return {
     ["<leader>b"] = { name = "Buffers" },
     -- quick save
     ["<C-s>"] = { ":w!<cr>", desc = "Save File" }, -- change description but the same command
+    ["gd"] = {
+      "<Cmd>Lspsaga peek_definition<CR>",
+      desc = "LSP definition",
+    },
+
+    ["ga"] = {
+      "<cmd>Lspsaga code_action<CR>",
+      desc = "LSP code action",
+    },
+
+    ["gr"] = {
+      "<cmd>Lspsaga finder ref<CR>",
+      desc = "LSP references",
+    },
+
+    ["[d"] = {
+      "<cmd>Lspsaga diagnostic_jump_prev<CR>",
+      desc = "Goto prev",
+    },
+
+    ["]d"] = {
+      "<cmd>Lspsaga diagnostic_jump_next<CR>",
+      desc = "Goto next",
+    },
   },
   t = {
     -- setting a mapping to false will disable it
