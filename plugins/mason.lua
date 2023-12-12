@@ -12,7 +12,7 @@ return {
   -- use mason-null-ls to configure Formatters/Linter installation for null-ls sources
   {
     "jay-babu/mason-null-ls.nvim",
-    enable = false,
+    enabled = false,
     -- overrides `require("mason-null-ls").setup(...)`
     opts = function(_, opts)
       -- add more things to the ensure_installed table protecting against community packs modifying it
@@ -24,7 +24,7 @@ return {
   },
   {
     "jay-babu/mason-nvim-dap.nvim",
-    enable = false,
+    -- enabled = false,
     -- overrides `require("mason-nvim-dap").setup(...)`
     opts = function(_, opts)
       -- add more things to the ensure_installed table protecting against community packs modifying it

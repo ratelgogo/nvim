@@ -38,9 +38,23 @@ return {
     ["<leader>b"] = { name = "Buffers" },
     -- quick save
     ["<C-s>"] = { ":w!<cr>", desc = "Save File" }, -- change description but the same command
+    ["gD"] = {
+      "<Cmd>Lspsaga goto_definition<CR>",
+      desc = "LSP definition",
+    },
+
     ["gd"] = {
       "<Cmd>Lspsaga peek_definition<CR>",
       desc = "LSP definition",
+    },
+
+    ["K"] = {
+      "<Cmd>Lspsaga hover_doc<CR>",
+      desc = "LSP hover",
+    },
+    ["gi"] = {
+      "<cmd>Lspsaga finder imp<CR>",
+      desc = "LSP implementation",
     },
 
     ["ga"] = {
@@ -73,5 +87,6 @@ return {
     ["<C-l>"] = { "<Right>", desc = "Move right" },
     ["<C-j>"] = { "<Down>", desc = "Move down" },
     ["<C-k>"] = { "<Up>", desc = "Move up" },
+    ["<C-s>"] = { "<esc>:w!<cr>", desc = "Save File" }, -- change description but the same command
   },
 }

@@ -1,3 +1,9 @@
+vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+  vim.lsp.diagnostic.on_publish_diagnostics, {
+    -- delay update diagnostics
+    update_in_insert = true,
+  }
+)
 local neovide_config = function()
   vim.o.guifont = "FiraCode Nerd Font:h16"
   -- vim.o.guifont = "Hack Nerd Font:h15"
@@ -73,7 +79,7 @@ return {
       -- end
     },
     mappings = function(maps)
-      if maps.n.gd then maps.n.gd[1] = function() vim.cmd('Lspsaga peek_definition') end end
+      if maps.n.gd then maps.n.gd[1] = function() vim.cmd "Lspsaga peek_definition" end end
       if maps.n.gI then maps.n.gI[1] = function() vim.lsp.buf.implementation() end end
       if maps.n.gr then maps.n.gr[1] = function() vim.lsp.buf.references() end end
       if maps.n.gy then maps.n.gy[1] = function() vim.lsp.buf.type_definition() end end
@@ -220,6 +226,9 @@ return {
   -- Configure require("lazy").setup() options
   lazy = {
     defaults = { lazy = true },
+      git = {
+      url_format = "git@github.com:%s.git"
+    },
     performance = {
       rtp = {
         -- customize default disabled vim plugins
@@ -245,15 +254,6 @@ return {
     --   },
     -- }
   end,
-  -- add new user interface icon
-  icons = {
-    VimIcon = "",
-    ScrollText = "",
-    GitBranch = "",
-    GitAdd = "",
-    GitChange = "",
-    GitDelete = "",
-  },
   -- modify variables used by heirline but not defined in the setup call directly
   heirline = {
     -- define the separators between each section
