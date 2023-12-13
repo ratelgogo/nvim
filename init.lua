@@ -1,9 +1,7 @@
-vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-  vim.lsp.diagnostic.on_publish_diagnostics, {
-    -- delay update diagnostics
-    update_in_insert = true,
-  }
-)
+vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
+  -- delay update diagnostics
+  update_in_insert = true,
+})
 local neovide_config = function()
   vim.o.guifont = "FiraCode Nerd Font:h16"
   -- vim.o.guifont = "Hack Nerd Font:h15"
@@ -48,8 +46,8 @@ return {
   },
 
   -- Set colorscheme to use
-  colorscheme = "astrodark",
-  -- colorscheme = "onedark",
+  -- colorscheme = "astrodark",
+  colorscheme = "onedark",
   -- Diagnostics configuration (for vim.diagnostics.config({...})) when diagnostics are on
   diagnostics = {
     virtual_text = true,
@@ -104,14 +102,14 @@ return {
       -- set jdtls server settings
       jdtls = function()
         -- use this function notation to build some variables
-        local root_markers = { ".git", "mvnw", "gradlew", "pom.xml", "build.gradle" }
+        local root_markers = { "mvnw", "gradlew", "pom.xml", "build.gradle" }
         local root_dir = require("jdtls.setup").find_root(root_markers)
 
         local home = os.getenv "HOME"
         -- calculate workspace dir
         local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
         local workspace_dir = vim.fn.stdpath "data" .. "/site/java/workspace-root/" .. project_name
-        os.execute("mkdir " .. workspace_dir)
+        if root_dir ~= nil then os.execute("mkdir " .. workspace_dir) end
 
         -- get the mason install path
         local install_path = require("mason-registry").get_package("jdtls"):get_install_path()
@@ -126,10 +124,24 @@ return {
           os = "linux"
         end
 
+        local java_debug_path = require("mason-registry").get_package("java-debug-adapter"):get_install_path()
+
         -- return the server config
         return {
           settings = {
             java = {
+              init_options = {
+                boundles = {
+                  vim.fn.glob(java_debug_path),
+                },
+              },
+              -- on_attach = function ()
+              -- require('jdtls').setup_dap {
+              --   hotcodereplace = 'auto',
+              -- }
+              -- require("jdtls.dap").setup_dap_main_class_configs()
+              -- vim.lsp.codelens.refresh()
+              -- end,
               format = {
                 settings = {
                   -- Use Google Java style guidelines for formatting
@@ -167,14 +179,17 @@ return {
                   staticStarThreshold = 9999,
                 },
               },
+              maven = {
+                downloadSources = true,
+              },
               -- How code generation should act
               codeGeneration = {
                 toString = {
                   template = "${object.className}{${member.name()}=${member.value}, ${otherMembers}}",
                 },
-                hashCodeEquals = {
-                  useJava7Objects = true,
-                },
+                -- hashCodeEquals = {
+                --   useJava7Objects = true,
+                -- },
                 useBlocks = true,
               },
               -- If you are developing in projects with different Java versions, you need
@@ -226,8 +241,8 @@ return {
   -- Configure require("lazy").setup() options
   lazy = {
     defaults = { lazy = true },
-      git = {
-      url_format = "git@github.com:%s.git"
+    git = {
+      url_format = "git@github.com:%s.git",
     },
     performance = {
       rtp = {

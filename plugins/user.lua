@@ -33,7 +33,6 @@ return {
   },
   {
     "karb94/neoscroll.nvim",
-    enabled = false,
     lazy = false,
     config = function() require("neoscroll").setup() end,
   },
@@ -44,6 +43,7 @@ return {
   {
     "mhartington/formatter.nvim",
     event = "VeryLazy",
+    enabled = false,
     opts = function()
       return {
         filetype = {
@@ -76,8 +76,8 @@ return {
             require("formatter.filetypes.vue").prettier,
           },
           java = {
-            require("formatter.filetypes.java").google_java_format()
-          }
+            require("formatter.filetypes.java").google_java_format,
+          },
         },
       }
     end,
@@ -85,13 +85,14 @@ return {
   {
     "mfussenegger/nvim-lint",
     event = "VeryLazy",
+    enabled = false,
     config = function()
       require("lint").linters_by_ft = {
         javascript = { "eslint" },
         typescript = { "eslint" },
         java = {
-          "checkstyle"
-        }
+          "checkstyle",
+        },
       }
     end,
   },
@@ -114,6 +115,7 @@ return {
 
       saga.setup {
         preview = { lines_above = 0, lines_below = 10 },
+        code_action = {},
         ui = {
           -- currently only round theme
           theme = "round",
@@ -149,12 +151,23 @@ return {
         outline = {
           layout = "float",
         },
+        diagnostic = {
+          diagnostic_only_current = true,
+        },
+        scroll_preview = {
+          scroll_down = "<C-d>",
+          scroll_up = "<C-u>",
+        },
+        lightbulb = {
+          enable = false,
+        },
       }
     end,
   },
   {
     "mfussenegger/nvim-jdtls", -- load jdtls on module
     event = "VeryLazy",
+    enabled = true,
     ft = { "java" },
     {
       "williamboman/mason-lspconfig.nvim",
@@ -185,7 +198,7 @@ return {
           override = {
             ["vim.lsp.util.convert_input_to_markdown_lines"] = false,
             ["vim.lsp.util.stylize_markdown"] = false,
-            ["cmp.entry.get_documentation"] = false,
+            ["cmp.entry.get_documentation"] = true,
           },
           hover = {
             enabled = false,

@@ -10,7 +10,13 @@ return { -- override nvim-cmp plugin
     -- the function is lazy loaded so cmp is able to be required
     -- modify the mapping part of the table
     opts.mapping["<C-x>"] = cmp.mapping.select_next_item()
-
+    -- modify the sources part of the options table
+    opts.sources = cmp.config.sources {
+      { name = "nvim_lsp", priority = 1000 },
+      { name = "luasnip", priority = 750 },
+      { name = "buffer", priority = 500 },
+      { name = "path", priority = 250 },
+    }
     -- return the new table to be used
     return opts
   end,
