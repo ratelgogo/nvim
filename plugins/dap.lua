@@ -20,41 +20,24 @@ local dap = require "dap"
 -- -- vim.keymap.set("n", "<leader>dS", function() run_spring_boot(true) end)
 --
 
-function attach_to_debug()
-  dap.adapters.java = function(callback)
-  -- Here a function needs to trigger the `vscode.java.startDebugSession` LSP command
-  -- The response to the command must be the `port` used below
-  callback({
-    type = 'server';
-    host = '127.0.0.1';
-    port = 5005;
-  })
-end
-  dap.configurations.java = {
-    {
-      type = "java",
-      request = "attach",
-      name = "Attach to the process",
-      hostName = "127.0.0.1",
-      port = 5005,
-    },
-  }
-  dap.continue()
-end
-
-vim.keymap.set("n", "<leader>da", ":lua attach_to_debug()<CR>")
-local jdtls = require("jdtls")
-
-local java_debug_path = require("mason-registry").get_package("java-debug-adapter"):get_install_path()
-local config = {
-  init_options = {
-    bundles = {
-      vim.fn.glob(java_debug_path .. "com.microsoft.java.debug.plugin/target/com.microsoft.java.debug.plugin-*.jar"),
-    },
-  },
-  on_attach = function() jdtls.setup_dap { hotcodereplace = "auto" } end,
+return {
+  "jay-babu/mason-nvim-dap.nvim",
+  config = function ()
+    dap.adapters.java = function(callback)
+      callback {
+        type = "server",
+        host = "127.0.0.1",
+        port = 5005,
+      }
+    end
+    dap.configurations.java = {
+      {
+        type = "java",
+        request = "attach",
+        name = "Debug (Attach) - Remote",
+        hostName = "127.0.0.1",
+        port = 5005,
+      },
+    }
+  end,
 }
-
-jdtls.start_or_attach(config)
-
-return {}

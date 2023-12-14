@@ -1,3 +1,14 @@
+local function directory_exists(path)
+  local f = io.popen("cd " .. path)
+  if f == nil then return false end
+  local ff = f:read "*all"
+
+  if ff:find "ItemNotFoundException" then
+    return false
+  else
+    return true
+  end
+end
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
   -- delay update diagnostics
   update_in_insert = true,
@@ -93,7 +104,13 @@ return {
         vim.api.nvim_create_autocmd("Filetype", {
           pattern = "java", -- autocmd to start jdtls
           callback = function()
-            if opts.root_dir and opts.root_dir ~= "" then require("jdtls").start_or_attach(opts) end
+            if opts.root_dir and opts.root_dir ~= "" then
+              opts["on_attach"] = function()
+                -- require("jdtls.dap").setup_dap_main_class_configs()
+                require("jdtls").setup_dap()
+              end
+              require("jdtls").start_or_attach(opts)
+            end
           end,
         })
       end,
@@ -109,8 +126,16 @@ return {
         -- calculate workspace dir
         local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
         local workspace_dir = vim.fn.stdpath "data" .. "/site/java/workspace-root/" .. project_name
-        if root_dir ~= nil then os.execute("mkdir " .. workspace_dir) end
+        if
+          workspace_dir
+          and workspace_dir ~= nil
+          and workspace_dir ~= ""
+          and directory_exists(workspace_dir) == false
+        then
+          os.execute("mkdir " .. workspace_dir)
+        end
 
+        local mason_path = vim.fn.glob(vim.fn.stdpath "data" .. "/mason/")
         -- get the mason install path
         local install_path = require("mason-registry").get_package("jdtls"):get_install_path()
 
@@ -124,19 +149,35 @@ return {
           os = "linux"
         end
 
+        -- local java_debug_path = require("mason-registry").get_package("java-debug-adapter"):get_install_path()
+        --   .. "/extension/server/com.microsoft.java.debug.plugin-*.jar"
+
+        local bundles = {}
+
+        ---
+        -- Include java-test bundle if present
+        ---
+        local java_test_path = require("mason-registry").get_package("java-test"):get_install_path()
+
+        local java_test_bundle = vim.split(vim.fn.glob(java_test_path .. "/extension/server/*.jar"), "\n")
+
+        if java_test_bundle[1] ~= "" then vim.list_extend(bundles, java_test_bundle) end
+        ---
+        -- Include java-debug-adapter bundle if present
+        ---
         local java_debug_path = require("mason-registry").get_package("java-debug-adapter"):get_install_path()
 
+        local java_debug_bundle =
+          vim.split(vim.fn.glob(java_debug_path .. "/extension/server/com.microsoft.java.debug.plugin-*.jar"), "\n")
+
+        if java_debug_bundle[1] ~= "" then vim.list_extend(bundles, java_debug_bundle) end
         -- return the server config
         return {
+          init_options = {
+            boundles = bundles,
+          },
           settings = {
             java = {
-              init_options = {
-                boundles = {
-                  vim.fn.glob(
-                    java_debug_path .. "com.microsoft.java.debug.plugin/target/com.microsoft.java.debug.plugin-*.jar"
-                  ),
-                },
-              },
               format = {
                 settings = {
                   -- Use Google Java style guidelines for formatting
@@ -202,9 +243,6 @@ return {
               },
             },
           },
-          -- on_attach = function()
-          --   require('jdtls').setup_dap()
-          -- end,
           cmd = {
             home .. "/.sdkman/candidates/java/21-open/bin/java",
             "-Declipse.application=org.eclipse.jdt.ls.core.id1",
