@@ -2,7 +2,7 @@ return {
   "onsails/lspkind.nvim",
   opts = function(_, opts)
     -- options: 'text', 'text_symbol', 'symbol_text', 'symbol'
-    opts.mode = 'text_symbol'
+    opts.mode = 'symbol_text'
     opts.preset = "codicons"
     -- set some missing symbol types
     opts.symbol_map = {

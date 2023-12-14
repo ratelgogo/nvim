@@ -132,16 +132,11 @@ return {
             java = {
               init_options = {
                 boundles = {
-                  vim.fn.glob(java_debug_path),
+                  vim.fn.glob(
+                    java_debug_path .. "com.microsoft.java.debug.plugin/target/com.microsoft.java.debug.plugin-*.jar"
+                  ),
                 },
               },
-              -- on_attach = function ()
-              -- require('jdtls').setup_dap {
-              --   hotcodereplace = 'auto',
-              -- }
-              -- require("jdtls.dap").setup_dap_main_class_configs()
-              -- vim.lsp.codelens.refresh()
-              -- end,
               format = {
                 settings = {
                   -- Use Google Java style guidelines for formatting
@@ -207,6 +202,9 @@ return {
               },
             },
           },
+          -- on_attach = function()
+          --   require('jdtls').setup_dap()
+          -- end,
           cmd = {
             home .. "/.sdkman/candidates/java/21-open/bin/java",
             "-Declipse.application=org.eclipse.jdt.ls.core.id1",
