@@ -8,6 +8,8 @@ return {
     signcolumn = "auto", -- sets vim.opt.signcolumn to auto
     wrap = true, -- sets vim.opt.wrap
     showbreak = "↳",
+    list = true,
+    listchars = "space:·",
   },
   g = {
     mapleader = " ", -- sets vim.g.mapleader
