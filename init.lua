@@ -57,8 +57,8 @@ return {
   },
 
   -- Set colorscheme to use
-  colorscheme = "onelight",
-  -- colorscheme = "onedark_vivid",
+  -- colorscheme = "onelight",
+  colorscheme = "onedark_vivid",
   -- Diagnostics configuration (for vim.diagnostics.config({...})) when diagnostics are on
   diagnostics = {
     virtual_text = true,
